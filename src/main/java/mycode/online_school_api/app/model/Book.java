@@ -11,7 +11,6 @@ import java.util.Objects;
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @AllArgsConstructor
-@ToString
 @NoArgsConstructor
 @Data
 @Getter
@@ -60,14 +59,17 @@ public class Book {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return id == book.id && Objects.equals(bookName, book.bookName);
+        return id == book.id && bookName.equals(book.bookName);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, bookName);
+    }
+
+    @Override
+    public String toString() {
+        return "Book{" + "id=" + id + ", bookName=" + bookName + ", createdAt=" + createdAt + ", student=" + student + '}';
     }
 }

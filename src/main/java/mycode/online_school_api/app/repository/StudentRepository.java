@@ -15,7 +15,8 @@ public interface StudentRepository extends JpaRepository<Student, Integer> {
     @EntityGraph(attributePaths = {"books"}, type = EntityGraph.EntityGraphType.FETCH)
     @Query("SELECT s FROM Student s WHERE s.id IN (SELECT b.student.id FROM Book b GROUP BY b.student.id HAVING COUNT(b) = (SELECT MAX(book_count) FROM (SELECT COUNT(b1) as book_count FROM Book b1 GROUP BY b1.student.id) as subquery))")
     Optional<List<Student>> findStudentsWithMostBooks();
-
+    @EntityGraph(attributePaths = {"books"}, type = EntityGraph.EntityGraphType.FETCH)
+    Optional<Student> findByEmailAndPassword(String email, String password);
 
 
 }

@@ -1,9 +1,13 @@
 package mycode.online_school_api;
 
-import mycode.online_school_api.app.model.Book;
+import mycode.online_school_api.app.model.Course;
+import mycode.online_school_api.app.model.Enrolment;
 import mycode.online_school_api.app.model.Student;
 import mycode.online_school_api.app.repository.BookRepository;
+import mycode.online_school_api.app.repository.CourseRepository;
+import mycode.online_school_api.app.repository.EnrolmentRepository;
 import mycode.online_school_api.app.repository.StudentRepository;
+import mycode.online_school_api.app.view.StudentView;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,15 +24,17 @@ public class OnlineSchoolApiApplication {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository, BookRepository bookRepository){
+    CommandLineRunner commandLineRunner(StudentRepository studentRepository, BookRepository bookRepository, CourseRepository courseRepository, EnrolmentRepository enrolmentRepository){
         return args -> {
 
-            Optional<Student> student = studentRepository.findByFirstNameAndLastName("Maria", "Popescu");
 
 
 
-
-
+//            Optional<Student> student = studentRepository.findByEmailAndPassword("maria.popescu@email.com", "SecurePass567!");
+//
+//            StudentView studentView = new StudentView(enrolmentRepository,courseRepository,studentRepository);
+//
+//            studentView.enrollIntoCourse(student.get());
 
         };
     }

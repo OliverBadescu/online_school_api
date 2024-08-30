@@ -2,24 +2,32 @@ package mycode.online_school_api.app.view;
 
 
 import mycode.online_school_api.app.model.Book;
+import mycode.online_school_api.app.model.Course;
+import mycode.online_school_api.app.model.Enrolment;
 import mycode.online_school_api.app.model.Student;
 import mycode.online_school_api.app.repository.BookRepository;
+import mycode.online_school_api.app.repository.CourseRepository;
+import mycode.online_school_api.app.repository.EnrolmentRepository;
 import mycode.online_school_api.app.repository.StudentRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.*;
 
-@Component
+//@Component
 public class View {
 
     private StudentRepository studentRepository;
     private BookRepository bookRepository;
+    private CourseRepository courseRepository;
+    private EnrolmentRepository enrolmentRepository;
     private Scanner scanner;
 
-    public View(StudentRepository studentRepository, BookRepository bookRepository){
+    public View(StudentRepository studentRepository, BookRepository bookRepository, CourseRepository courseRepository, EnrolmentRepository enrolmentRepository){
         this.studentRepository =studentRepository;
         this.bookRepository = bookRepository;
+        this.courseRepository = courseRepository;
+        this.enrolmentRepository = enrolmentRepository;
         this.scanner = new Scanner(System.in);
         play();
     }
@@ -40,6 +48,11 @@ public class View {
 
         System.out.println("8. Show student with most books");
         System.out.println("9. Show book that most students have");
+
+        System.out.println("Courses:");
+        System.out.println("10. Show courses");
+        System.out.println("11. Add a course");
+        System.out.println("12. Delete a course");
 
 
 
@@ -81,6 +94,15 @@ public class View {
                     break;
                 case 9:
                     bookThatMostStudentsHave();
+                    break;
+                case 10:
+                    showCourses();
+                    break;
+                case 11:
+                    addCourse();
+                    break;
+                case 12:
+                    deleteCourse();
                     break;
                 default:
                     System.out.println("Wrong input");
@@ -264,6 +286,56 @@ public class View {
         Optional<List<Object[]>> list = bookRepository.bookThatMostStudentsHave();
 
         list.ifPresent(objects -> System.out.println(Arrays.toString(objects.get(0))));
+
+    }
+
+    private void showCourses(){
+
+        List<Course> list = courseRepository.findAll();
+
+        list.forEach(System.out::println);
+
+    }
+
+    private void addCourse(){
+        System.out.println("Name:");
+        String name = scanner.nextLine();
+        System.out.println("Department:");
+        String department = scanner.nextLine();
+
+        Course course = Course.builder().name(name).department(department).build();
+
+        courseRepository.saveAndFlush(course);
+    }
+
+    private void deleteCourse(){
+
+        System.out.println("Name:");
+        String name = scanner.nextLine();
+        System.out.println("Department:");
+        String department = scanner.nextLine();
+
+        Optional<Course> course = courseRepository.findByNameAndDepartment(name, department);
+
+        boolean enrolled = false;
+
+        List<Enrolment> list = enrolmentRepository.findAll();
+
+        if(course.isPresent()) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getCourse().getId() == course.get().getId()) {
+
+                    enrolled = true;
+                }
+            }
+
+            if(!enrolled){
+                courseRepository.delete(course.get());
+            }else{
+                System.out.println("Course has students currently enrolled");
+            }
+        }
+
 
     }
 }
